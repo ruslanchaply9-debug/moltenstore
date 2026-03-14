@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>MoltenStore Admin</title>
+
+<style>
+
+body{
+background:#020617;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+.order{
+background:#1e293b;
+padding:15px;
+margin-bottom:10px;
+border-radius:10px;
+}
+
+button{
+margin-left:10px;
+padding:5px 10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Админ панель</h1>
+
+<input id="pass" placeholder="пароль">
+<button onclick="login()">Войти</button>
+
+<div id="panel" style="display:none">
+
+<h2>Заказы</h2>
+
+<div id="orders"></div>
+
+</div>
+
+<script>
+
+const password="molten123"
+
+function login(){
+
+const p=document.getElementById("pass").value
+
+if(p===password){
+
+document.getElementById("panel").style.display="block"
+
+loadOrders()
+
+}
+
+else{
+
+alert("Неверный пароль")
+
+}
+
+}
+
+async function loadOrders(){
+
+const res=await fetch("/api/orders")
+
+const data=await res.json()
+
+let html=""
+
+data.forEach(o=>{
+
+html+=`
+
+<div class="order">
+
+${o.product} - ${o.price} TON
+
+<select onchange="changeStatus(this.value)">
+
+<option>ожидает</option>
+<option>оплачено</option>
+<option>в работе</option>
+<option>готово</option>
+
+</select>
+
+</div>
+
+`
+
+})
+
+document.getElementById("orders").innerHTML=html
+
+}
+
+</script>
+
+</body>
+</html>
